@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Users, Receipt, Settings } from 'lucide-react';
+import { LayoutDashboard, Users, Receipt } from 'lucide-react';
 
 const Sidebar = ({ onMenuClick }: { onMenuClick?: () => void }) => {
   return (
