@@ -257,7 +257,8 @@ function tambahTransaksi(data) {
     data.Tanggal || tgl.toLocaleDateString(),
     data.NIS || '',
     data.ID_Tarif || '',
-    data.Nominal_Dibayar || 0
+    data.Nominal_Dibayar || 0,
+    data.Penerima || ''
   ]);
   return responseSuccess('Transaksi berhasil dicatat');
 }

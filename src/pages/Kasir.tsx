@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Search, Save, AlertCircle, User, CreditCard, Printer } from 'lucide-react';
-import { fetchSiswa, fetchTarif, fetchTransaksi, tambahTransaksi } from '../api';
+import { fetchSiswa, fetchTarif, fetchTransaksi, tambahTransaksi, getKasirName } from '../api';
 
 const Kasir = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -96,6 +96,12 @@ const Kasir = () => {
 
 
   const handleSimpanBayar = async () => {
+    const kasirName = getKasirName();
+    if (!kasirName) {
+      alert('Nama Kasir/Petugas belum diatur! Silakan atur di menu Pengaturan terlebih dahulu sebelum memproses pembayaran.');
+      return;
+    }
+
     if (!selectedTarif || !nominal) {
       alert('Pilih jenis pembayaran dan isi nominal!');
       return;
@@ -105,7 +111,8 @@ const Kasir = () => {
     const payload = {
       NIS: siswaData.NIS,
       ID_Tarif: selectedTarif,
-      Nominal_Dibayar: nominal
+      Nominal_Dibayar: nominal,
+      Penerima: kasirName
     };
 
     const res = await tambahTransaksi(payload);
@@ -252,16 +259,22 @@ const Kasir = () => {
           </table>
         </div>
 
-        <div style={{ marginTop: '2rem', fontSize: '0.9rem' }}>
-          <p style={{ marginBottom: '1rem' }}>
-            Terimakasih telah menyelesaikan iuran murid, Semoga<br/>
-            rezeki yang dikeluarkan mendapat ganti<br/>
-            yang lebih baik dan barokah Amin
-          </p>
-          <p>
-            * Jika ada ketidak sesuaian perhitungan silahkan Hubungi<br/>
-            Masduqi di 085 224 899 824
-          </p>
+        <div style={{ marginTop: '2rem', fontSize: '0.9rem', display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '2rem' }}>
+          <div>
+            <p style={{ marginBottom: '1rem' }}>
+              Terimakasih telah menyelesaikan iuran murid, Semoga<br/>
+              rezeki yang dikeluarkan mendapat ganti<br/>
+              yang lebih baik dan barokah Amin
+            </p>
+            <p>
+              * Jika ada ketidak sesuaian perhitungan silahkan Hubungi<br/>
+              Masduqi di 085 224 899 824
+            </p>
+          </div>
+          <div style={{ textAlign: 'center', minWidth: '150px' }}>
+            <p style={{ marginBottom: '4rem' }}>Penerima / Kasir</p>
+            <p style={{ fontWeight: 'bold', textDecoration: 'underline', textTransform: 'uppercase' }}>{getKasirName() || '( .................... )'}</p>
+          </div>
         </div>
       </div>
     );

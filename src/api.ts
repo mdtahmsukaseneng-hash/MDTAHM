@@ -8,6 +8,14 @@ export const setGasUrl = (url: string) => {
   localStorage.setItem('GAS_URL', url);
 };
 
+export const getKasirName = () => {
+  return localStorage.getItem('NAMA_KASIR') || '';
+};
+
+export const setKasirName = (name: string) => {
+  localStorage.setItem('NAMA_KASIR', name);
+};
+
 export const fetchSiswa = async (nis?: string) => {
   const urlBase = getGasUrl();
   if (!urlBase) {

@@ -1,19 +1,22 @@
 import { useState, useEffect } from 'react';
-import { Save, Database, AlertCircle } from 'lucide-react';
-import { getGasUrl, setGasUrl } from '../api';
+import { Save, Database, AlertCircle, User } from 'lucide-react';
+import { getGasUrl, setGasUrl, getKasirName, setKasirName } from '../api';
 
 const Settings = () => {
   const [url, setUrl] = useState('');
+  const [kasirName, setKasirNameState] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     // Load existing URL on mount
     setUrl(getGasUrl());
+    setKasirNameState(getKasirName());
   }, []);
 
   const handleSave = () => {
     setIsSaving(true);
     setGasUrl(url);
+    setKasirName(kasirName);
     
     setTimeout(() => {
       setIsSaving(false);
@@ -52,6 +55,37 @@ const Settings = () => {
               placeholder="https://script.google.com/macros/s/.../exec"
               style={{ fontFamily: 'monospace', fontSize: '0.875rem' }}
             />
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '2rem' }}>
+            <button 
+              className="btn btn-primary" 
+              onClick={handleSave}
+              disabled={isSaving}
+            >
+              <Save size={18} /> {isSaving ? 'Menyimpan...' : 'Simpan Pengaturan'}
+            </button>
+          </div>
+        </div>
+
+        <div className="card">
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-main)' }}>
+            <User size={20} className="text-primary" style={{ color: 'var(--primary-color)' }} />
+            Identitas Petugas (Kasir)
+          </h2>
+          
+          <div className="form-group">
+            <label>Nama Petugas / Kasir</label>
+            <input 
+              type="text" 
+              className="form-control" 
+              value={kasirName}
+              onChange={(e) => setKasirNameState(e.target.value)}
+              placeholder="Masukkan nama petugas/kasir yang menggunakan perangkat ini"
+            />
+            <small style={{ color: 'var(--text-muted)', display: 'block', marginTop: '0.5rem' }}>
+              Nama ini akan dicetak pada nota pembayaran dan dicatat di laporan penerimaan kas.
+            </small>
           </div>
 
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '2rem' }}>
