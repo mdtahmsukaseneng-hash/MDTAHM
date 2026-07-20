@@ -5,6 +5,7 @@ import { fetchSiswa, tambahSiswa, editSiswa } from '../api';
 const DataSiswa = ({ statusFilter = 'Aktif' }: { statusFilter?: 'Aktif' | 'Nonaktif' }) => {
   const [showForm, setShowForm] = useState(false);
   const [siswaList, setSiswaList] = useState<any[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   
@@ -106,6 +107,13 @@ const DataSiswa = ({ statusFilter = 'Aktif' }: { statusFilter?: 'Aktif' | 'Nonak
     }
     setIsSaving(false);
   };
+
+  const filteredSiswa = siswaList.filter(s => {
+    const term = searchQuery.toLowerCase();
+    const nama = s.Nama_Lengkap ? String(s.Nama_Lengkap).toLowerCase() : '';
+    const nis = s.NIS ? String(s.NIS).toLowerCase() : '';
+    return nama.includes(term) || nis.includes(term);
+  });
 
   if (isLoading) {
     return (
@@ -271,6 +279,8 @@ const DataSiswa = ({ statusFilter = 'Aktif' }: { statusFilter?: 'Aktif' | 'Nonak
                   className="form-control" 
                   placeholder="Cari berdasarkan Nama atau NIS..." 
                   style={{ paddingLeft: '2.5rem' }}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
             </div>
@@ -292,10 +302,12 @@ const DataSiswa = ({ statusFilter = 'Aktif' }: { statusFilter?: 'Aktif' | 'Nonak
               <tbody>
                 {isLoading ? (
                   <tr><td colSpan={7} style={{ textAlign: 'center' }}>Memuat data...</td></tr>
-                ) : siswaList.length === 0 ? (
-                  <tr><td colSpan={7} style={{ textAlign: 'center' }}>Belum ada data siswa</td></tr>
+                ) : filteredSiswa.length === 0 ? (
+                  <tr><td colSpan={7} style={{ textAlign: 'center' }}>
+                    {searchQuery ? `Tidak ada santri yang cocok dengan "${searchQuery}"` : 'Belum ada data siswa'}
+                  </td></tr>
                 ) : (
-                  siswaList.map((siswa, idx) => (
+                  filteredSiswa.map((siswa, idx) => (
                     <tr key={idx}>
                       <td>{siswa.NIS}</td>
                       <td style={{ fontWeight: 500, color: siswa.Status === 'Keluar' || siswa.Status === 'Lulus' ? 'var(--text-muted)' : 'inherit' }}>
