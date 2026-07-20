@@ -5,6 +5,7 @@ import DataSiswa from './pages/DataSiswa';
 import Kasir from './pages/Kasir';
 import MasterTarif from './pages/MasterTarif';
 import Settings from './pages/Settings';
+import Laporan from './pages/Laporan';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="siswa-nonaktif" element={<DataSiswa statusFilter="Nonaktif" />} />
           <Route path="tarif" element={<MasterTarif />} />
           <Route path="kasir" element={<Kasir />} />
+          <Route path="laporan" element={<Laporan />} />
           <Route path="pengaturan" element={<Settings />} />
         </Route>
       </Routes>

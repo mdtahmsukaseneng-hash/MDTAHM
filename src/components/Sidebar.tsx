@@ -57,7 +57,14 @@ const Sidebar = ({ onMenuClick }: { onMenuClick?: () => void }) => {
           <span>Kasir / Pembayaran</span>
         </NavLink>
 
-
+        <NavLink 
+          to="/laporan" 
+          onClick={onMenuClick}
+          className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+        >
+          <Receipt size={20} />
+          <span>Laporan Keuangan</span>
+        </NavLink>
       </nav>
     </aside>
   );

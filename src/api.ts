@@ -22,7 +22,7 @@ export const fetchSiswa = async (nis?: string) => {
     console.warn("GAS_URL belum diatur!");
     return [];
   }
-  
+
   try {
     const url = (nis !== undefined && nis !== '') ? `${urlBase}?action=getSiswa&nis=${nis}` : `${urlBase}?action=getSiswa`;
     const response = await fetch(url);
@@ -67,7 +67,7 @@ export const tambahSiswa = async (data: any) => {
     alert("Koneksi Database belum diatur (GAS_URL kosong).");
     return { status: 'error' };
   }
-  
+
   try {
     const response = await fetch(`${urlBase}?action=tambahSiswa`, {
       method: 'POST',
@@ -85,7 +85,7 @@ export const tambahSiswa = async (data: any) => {
 export const editSiswa = async (data: any) => {
   const urlBase = getGasUrl();
   if (!urlBase) return { status: 'error' };
-  
+
   try {
     const response = await fetch(`${urlBase}?action=editSiswa`, {
       method: 'POST',
@@ -117,6 +117,24 @@ export const tambahTransaksi = async (data: any) => {
     return result;
   } catch (error) {
     console.error("Gagal mencatat transaksi:", error);
+    return { status: 'error', message: 'Koneksi gagal' };
+  }
+};
+
+export const serahkanUang = async (kasirLama: string, penerimaBaru: string = 'Anah') => {
+  const urlBase = getGasUrl();
+  if (!urlBase) return { status: 'error', message: 'Koneksi gagal' };
+
+  try {
+    const response = await fetch(`${urlBase}?action=serahkanUang`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ kasirLama, penerimaBaru })
+    });
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error("Gagal menyerahkan uang:", error);
     return { status: 'error', message: 'Koneksi gagal' };
   }
 };

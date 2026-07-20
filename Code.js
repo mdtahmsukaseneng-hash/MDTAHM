@@ -23,6 +23,8 @@ function doPost(e) {
     return editTarif(data);
   } else if (action === 'hapusTarif') {
     return hapusTarif(data);
+  } else if (action === 'serahkanUang') {
+    return serahkanUang(data);
   }
 
   return responseError('Aksi tidak ditemukan');
@@ -261,6 +263,31 @@ function tambahTransaksi(data) {
     data.Penerima || ''
   ]);
   return responseSuccess('Transaksi berhasil dicatat');
+}
+
+function serahkanUang(data) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_TRANSAKSI);
+  var listData = sheet.getDataRange().getValues();
+  var updatedCount = 0;
+  
+  var kasirLama = data.kasirLama;
+  var penerimaBaru = data.penerimaBaru || 'Anah';
+  
+  if (!kasirLama) return responseError('Nama kasir lama tidak diberikan');
+
+  // Kolom Penerima ada di index 5 (Kolom F)
+  for (var i = 1; i < listData.length; i++) {
+    if (listData[i][5] && listData[i][5].toString().trim() === kasirLama.trim()) {
+      sheet.getRange(i + 1, 6).setValue(penerimaBaru);
+      updatedCount++;
+    }
+  }
+  
+  if (updatedCount > 0) {
+    return responseSuccess('Berhasil menyerahkan ' + updatedCount + ' transaksi ke ' + penerimaBaru);
+  } else {
+    return responseError('Tidak ada transaksi atas nama ' + kasirLama);
+  }
 }
 
 // ==========================================
